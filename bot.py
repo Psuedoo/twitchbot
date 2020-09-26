@@ -64,7 +64,7 @@ class Bot(commands.Bot):
         
         streamer_name = streamer_name.lstrip("@")
 
-        await ctx.send(f"Go check out https://www.twitch.tv/{streamer_name} . They are a great streamer!")
+        await ctx.send(f"Go check out https://www.twitch.tv/{streamer_name} They are an awesome person!")
 
 
     @commands.command(name="discord")
