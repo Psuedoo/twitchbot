@@ -151,3 +151,29 @@ class Basic():
     async def pt(self, ctx):
         await ctx.send(f"The prefix is {ctx.prefix}, the command is {ctx.command}")
 
+    
+    @commands.command(name="github", aliases=["project", "gitlab", "git"])
+    async def github(self, ctx):
+        await ctx.send("The current project, probably: https://github.com/Psuedoo/twitchbot")
+
+
+    @commands.command(name="docs", aliases=["whatshouldpsuedoobedoinginsteadofaskingchat",])
+    async def docs(self, ctx):
+        await ctx.send("Read the docs.")
+
+
+    @commands.command(name="google")
+    async def google(self, ctx):
+        if self.check_args(ctx):
+            
+            args = self.clean_message(ctx)
+            phrase = args.replace(" ", "+")
+            
+            if phrase.endswith("+"):
+                phrase -= phrase[-1]
+            if phrase.startswith("+"):
+                phrase -= phrase[0]
+            
+            await ctx.send(f"https://www.google.com/?q={phrase}")
+        else:
+            await ctx.send("Please supply a query to Google.")
