@@ -198,3 +198,13 @@ class Basic():
     async def dog(self, ctx):
         response = requests.get("https://api.thedogapi.com/v1/images/search")
         await ctx.send(f"{response.json()[0]['url']}")
+
+    @commands.command(name="birb")
+    async def birb(self, ctx):
+        response = requests.get("https://some-random-api.ml/img/birb")
+        await ctx.send(f"{response.json()['link']}")
+
+    @commands.command(name="meme")
+    async def meme(self, ctx):
+        response = requests.get("https://some-random-api.ml/meme")
+        await ctx.send(f"{response.json()['image']}")
