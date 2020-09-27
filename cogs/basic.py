@@ -1,6 +1,9 @@
 import subprocess
 import wikipedia
 import random
+import requests
+import json
+from http import HTTPStatus
 from twitchio.ext import commands
 from twitchio import dataclasses
 from cogs.utils import checks
@@ -170,10 +173,25 @@ class Basic():
             phrase = args.replace(" ", "+")
             
             if phrase.endswith("+"):
-                phrase -= phrase[-1]
+                phrase = phrase[:-1]
             if phrase.startswith("+"):
-                phrase -= phrase[0]
+                phrase = phrase[1:]
             
-            await ctx.send(f"https://www.google.com/?q={phrase}")
+            await ctx.send(f"https://www.google.com/search?q={phrase}")
         else:
             await ctx.send("Please supply a query to Google.")
+
+
+    @commands.command(name="affirmation")
+    async def affirmation(self, ctx):
+        response = requests.get("https://www.affirmations.dev/")
+        await ctx.send(f"{response.json()['affirmation']}.")
+
+
+    @commands.command(name="cat")
+    async def cat(self, ctx):
+        statuses = list(HTTPStatus)
+        status = random.choice(statuses)
+        await ctx.send(f"https://http.cat/{status.value}")
+
+
