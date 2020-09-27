@@ -194,4 +194,7 @@ class Basic():
         status = random.choice(statuses)
         await ctx.send(f"https://http.cat/{status.value}")
 
-
+    @commands.command(name="dog")
+    async def dog(self, ctx):
+        response = requests.get("https://api.thedogapi.com/v1/images/search")
+        await ctx.send(f"{response.json()[0]['url']}")
