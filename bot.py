@@ -6,6 +6,12 @@ import traceback
 from twitchio.ext import commands
 from cogs.utils import checks
 
+initial_extensions = [
+        "cogs.admin",
+        "cogs.basic",
+        ]
+
+
 class Bot(commands.Bot):
     def __init__(self):
         super().__init__(
@@ -17,8 +23,6 @@ class Bot(commands.Bot):
         )
 
         
-        initial_extensions = ["cogs.admin", "cogs.basic"]
-        
         for extension in initial_extensions:
             try:
                 self.load_module(extension)
@@ -26,19 +30,40 @@ class Bot(commands.Bot):
                 print(f"Failed to load extension {extension}.")
                 traceback.print_exc()
 
-    def check_args(self, prefix, message):
-        message = message.lstrip(prefix)
-        if message:
-            return True
-        else:
-            return False
+    def clean_message(self, ctx):
+        command_name = None
+        message = ctx.message.clean_content
+        
+        if ctx.command.aliases:
+            for alias in ctx.command.aliases:
+                if message.startswith(alias):
+                    print(alias)
+                    command_name = alias
+                    break
+        if message.startswith(ctx.command.name):
+            command_name = ctx.command.name
 
-    def get_args(self, prefix, message):
-        check = self.check_args(prefix, message)
+        message = message.replace(command_name, '')
+        return message
+
+
+
+    def check_args(self, ctx):
+            message = self.clean_message(ctx)
+            if message:
+                return True
+            else:
+                return False
+
+
+    def get_args(self, ctx):
+        check = self.check_args(ctx)
         if check:
-            return message.lstrip(f"{prefix} ")
+            args = self.clean_message(ctx)
+            return args
         else:
             return None
+
 
 
     # Events don't need decorators when subclassed
@@ -66,14 +91,6 @@ class Bot(commands.Bot):
 
         await ctx.send(f"Go check out https://www.twitch.tv/{streamer_name} They are an awesome person!")
 
-
-    @commands.command(name="discord")
-    async def discord(self, ctx):
-        if ctx.channel.name == "psuedoo":
-            await ctx.send("Join the Discord to stay connected after stream! https://discord.gg/UcFgW6A")
-        elif ctx.channel.name == "lettrebag":
-            await ctx.send("Hey, did you know there is a Discord server that you can chat with all of your new friends? You can also see plenty of pet pictures! Join here: https://discord.gg/SpD5ZDt")
-        
 
 bot = Bot()
 bot.run()
