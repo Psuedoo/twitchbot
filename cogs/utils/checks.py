@@ -13,3 +13,12 @@ def is_mod(ctx):
 
 def is_psuedo(ctx):
     return ctx.message.author.name == "psuedoo"
+
+def is_psuedoos_channel(ctx):
+    return ctx.channel.name == "psuedoo"
+
+def is_lettrebags_channel(ctx):
+    return ctx.channel.name == "lettrebag"
+
+def is_arrowspices_channel(ctx):
+    return ctx.channel.name == "arrowspice"

@@ -3,6 +3,8 @@ import random
 import wikipedia
 import pdb
 import traceback
+import socketio
+import asyncio
 from twitchio.ext import commands
 from cogs.utils import checks
 
@@ -92,5 +94,17 @@ class Bot(commands.Bot):
         await ctx.send(f"Go check out https://www.twitch.tv/{streamer_name} They are an awesome person!")
 
 
-bot = Bot()
-bot.run()
+    @commands.command(name="send")
+    async def send(self, ctx):
+        # sio.emit('my event', {'data': 'message'})
+        await ctx.send("Sent.")
+
+    async def run_bot(bot):
+        await bot.run()
+
+
+if __name__ == '__main__':
+    bot = Bot()
+    
+    bot.run()
+

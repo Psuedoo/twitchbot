@@ -56,16 +56,18 @@ class Basic():
 
     @commands.command(name="roll")
     async def roll(self, ctx):
-        await ctx.send(f"You rolled a {random.randint(1, 6)}.")
-
-
-    @commands.command(name="tp")
-    async def tp(self, ctx):
-        if self.check_args("tp" , ctx.message.clean_content):
-            args = self.get_args("tp", ctx.message.clean_content)
-            await ctx.send(args)
+        if self.check_args(ctx):
+            args = self.get_args(ctx)
+            try:
+                number = int(args)
+                roll_number = random.randint(1, number)
+                await ctx.send(f"You rolled a {roll_number}.")
+            except TypeError:
+                await ctx.send("Please supply a number.")
+            else:
+                await ctx.send("Didn't work, lame.")
         else:
-            await ctx.send("You didn't have any arguments.")
+            await ctx.send(f"You rolled a {random.randint(1, 6)}.")
 
 
     # TODO: Fix bug when I do !rc eat sleep
@@ -73,7 +75,7 @@ class Basic():
     async def randchoice(self, ctx):
         if self.check_args(ctx):
             choice = random.choice(self.clean_message(ctx).split(" "))
-            args = self.get_args("randchoice", ctx.message.clean_content)
+            args = self.get_args(ctx)
             choice = random.choice(args.split(" "))
             await ctx.send(f"/me has chosen {choice}")
         else:
@@ -113,12 +115,6 @@ class Basic():
 
     @commands.command(name="hello", aliases=["h",])
     async def hello_command(self, ctx):
-        message = self.clean_message(ctx)
-        if message:
-            await ctx.send(message)
-        else:
-            await ctx.send("I guess there's no message")
-        
         await ctx.send(f"Hello {ctx.author.name}!")
 
 
@@ -148,14 +144,9 @@ class Basic():
             await ctx.send("Join the Discord to stay connected after stream! https://discord.gg/UcFgW6A")
         elif ctx.channel.name == "lettrebag":
             await ctx.send("Hey, did you know there is a Discord server that you can chat with all of your new friends? You can also see plenty of pet pictures! Join here: https://discord.gg/SpD5ZDt")
- 
 
-    @commands.command(name="pt")
-    async def pt(self, ctx):
-        await ctx.send(f"The prefix is {ctx.prefix}, the command is {ctx.command}")
 
-    
-    @commands.command(name="github", aliases=["project", "gitlab", "git"])
+    @commands.check(checks.is_psuedoos_channel)
     async def github(self, ctx):
         await ctx.send("The current project, probably: https://github.com/Psuedoo/twitchbot")
 
@@ -208,3 +199,6 @@ class Basic():
     async def meme(self, ctx):
         response = requests.get("https://some-random-api.ml/meme")
         await ctx.send(f"{response.json()['image']}")
+
+
+    
