@@ -1,9 +1,6 @@
 import os
 import random
 import wikipedia
-import pdb
-import traceback
-import socketio
 import asyncio
 from aiohttp import web
 from twitchio.ext import commands
@@ -32,14 +29,13 @@ class Bot(commands.Bot):
 
         
 
-        self.run_web(app)
+        asyncio.run(self.run_web(app))
        
         for extension in initial_extensions:
             try:
                 self.load_module(extension)
             except Exception as e:
                 print(f"Failed to load extension {extension}.")
-                traceback.print_exc()
 
 
     async def handle(request):
@@ -119,10 +115,12 @@ class Bot(commands.Bot):
         await ctx.send("Sent.")
 
     async def run_bot(self):
-        await self.start()
+        task = asyncio.create_task(self.start())
+        await task
 
 
 if __name__ == '__main__':
     bot = Bot()
-    bot.run_bot()
-
+    asyncio.run(run_bot())
+    #task = asyncio.create_task(bot.run_bot())
+    #asyncio.get_running_loop()
