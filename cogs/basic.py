@@ -64,8 +64,6 @@ class Basic():
                 await ctx.send(f"You rolled a {roll_number}.")
             except TypeError:
                 await ctx.send("Please supply a number.")
-            else:
-                await ctx.send("Didn't work, lame.")
         else:
             await ctx.send(f"You rolled a {random.randint(1, 6)}.")
 
@@ -200,5 +198,19 @@ class Basic():
         response = requests.get("https://some-random-api.ml/meme")
         await ctx.send(f"{response.json()['image']}")
 
+    @commands.command(name="JoJo")
+    @commands.check(checks.is_lettrebags_channel)
+    async def jojo(self, ctx):
+        poses_dict = {"pose1": "url",
+                "pose2": "url",
+                "pose3": "url"}
+        pose = random.choice(list(poses_dict.items()))
+        await ctx.send(f"{pose[0]}: {pose[1]}")
 
-    
+    @commands.command(name="whothoughtofwebrtc", aliases=["wtowrtc",])
+    async def webrtc(self, ctx):
+        await ctx.send("Why ofcourse, it was @stupac62..")
+
+    @commands.command(name="bigtest")
+    async def bigtest(self, ctx):
+        await ctx.send("Yuuuuhhhh boiii")

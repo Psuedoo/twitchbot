@@ -5,6 +5,7 @@ import pdb
 import traceback
 import socketio
 import asyncio
+from aiohttp import web
 from twitchio.ext import commands
 from cogs.utils import checks
 
@@ -12,7 +13,6 @@ initial_extensions = [
         "cogs.admin",
         "cogs.basic",
         ]
-
 
 class Bot(commands.Bot):
     def __init__(self):
@@ -24,13 +24,32 @@ class Bot(commands.Bot):
             initial_channels=os.environ["CHANNEL"].split(";"),
         )
 
+
+
+        app = web.Application()
+        app.add_routes([web.get('/', self.handle),
+                        web.get('/{name}', self.handle)])
+
         
+
+        self.run_web(app)
+       
         for extension in initial_extensions:
             try:
                 self.load_module(extension)
             except Exception as e:
                 print(f"Failed to load extension {extension}.")
                 traceback.print_exc()
+
+
+    async def handle(request):
+        name = request.match_info.get("name", "Anonymous")
+        text = "Hello, " + name
+        return web.Response(text=text)
+
+    async def run_web(self, app):
+        await web.run_app(app, port=500)
+
 
     def clean_message(self, ctx):
         command_name = None
@@ -99,12 +118,11 @@ class Bot(commands.Bot):
         # sio.emit('my event', {'data': 'message'})
         await ctx.send("Sent.")
 
-    async def run_bot(bot):
-        await bot.run()
+    async def run_bot(self):
+        await self.start()
 
 
 if __name__ == '__main__':
     bot = Bot()
-    
-    bot.run()
+    bot.run_bot()
 
