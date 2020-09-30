@@ -211,6 +211,29 @@ class Basic():
     async def webrtc(self, ctx):
         await ctx.send("Why ofcourse, it was @stupac62..")
 
-    @commands.command(name="bigtest")
-    async def bigtest(self, ctx):
-        await ctx.send("Yuuuuhhhh boiii")
+    @commands.command(name="addquote", aliases=["aq",])
+    @commands.check(checks.is_mod)
+    async def addquote(self, ctx):
+        db = TinyDB(f'quotes_{ctx.channel.name}.json')
+        if self.check_args(ctx):
+            args = self.get_args(ctx)
+            # Psuedoo "Just look at it"
+            quote = args[args.find(';') + 2:]
+            author = args[:args.find(';')].lstrip(" ")
+            
+            Quote = Query()
+            # For some reason it isn't confirming that the quote already exists.. 
+            contains = db.contains(Quote['quote'] == quote)
+
+            if contains:
+                await ctx.send("Quote already exists...")
+            else:
+                db.insert({'author': author, 'quote': quote})
+                await ctx.send("Quote has been added successfully!")
+
+        else:
+            await ctx.send("Please supply some information, yo.")
+
+
+    # TODO: Add view quote command; Add edit quote command
+    # TODO: Add info command creation support
