@@ -20,9 +20,6 @@ class Bot(commands.Bot):
             prefix=os.environ["BOT_PREFIX"],
             initial_channels=os.environ["CHANNEL"].split(";"),
         )
-        self.app = web.Application()
-        self.app.add_routes([web.get('/', self.handle),
-                            web.get('/{name}', self.handle)])
 
 
 
@@ -70,13 +67,6 @@ class Bot(commands.Bot):
             return None
 
 
-    async def handle(self, request):
-        name = request.match_info.get('name', 'Anonmyous')
-        text = "Hello, " + name
-        return web.Response(text=text)
-
-    
-
     # Events don't need decorators when subclassed
     async def event_ready(self):
         print(f"Ready | {self.nick}")
@@ -85,11 +75,6 @@ class Bot(commands.Bot):
     async def event_message(self, message):
         print(f"{message._channel}'s channel:\n{message._author.name}:\t{message.content}\t{message.timestamp}")
         await self.handle_commands(message)
-
-    @commands.command(name="web")
-    async def web(self, ctx):
-        task = asyncio.create_task(web.run_app(self.app))        
-        await task
 
 
     # Commands use a decorator...
@@ -106,12 +91,7 @@ class Bot(commands.Bot):
         streamer_name = streamer_name.lstrip("@")
 
         await ctx.send(f"Go check out https://www.twitch.tv/{streamer_name} They are an awesome person!")
-async def main(bot):
-    task = asyncio.create_task(bot.start())
-    await task
 
 if __name__ == '__main__':
     bot = Bot()
     bot.run()
-    #asyncio.run(main(bot))
-    #asyncio.get_running_loop()

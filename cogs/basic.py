@@ -3,6 +3,7 @@ import wikipedia
 import random
 import requests
 import json
+import re
 from http import HTTPStatus
 from twitchio.ext import commands
 from twitchio import dataclasses
@@ -113,7 +114,11 @@ class Basic():
 
     @commands.command(name="hello", aliases=["h",])
     async def hello_command(self, ctx):
-        await ctx.send(f"Hello {ctx.author.name}!")
+        if self.check_args(ctx):
+            name = self.get_args(ctx)
+            await ctx.send(f"Hello, {name}")
+        else:
+            await ctx.send(f"Hello {ctx.author.name}!")
 
 
     # TODO: Maybe just download songs to listen to later.. maybe add songs to a spotify playlist? 
@@ -211,6 +216,7 @@ class Basic():
     async def webrtc(self, ctx):
         await ctx.send("Why ofcourse, it was @stupac62..")
 
+
     @commands.command(name="addquote", aliases=["aq",])
     @commands.check(checks.is_mod)
     async def addquote(self, ctx):
@@ -234,6 +240,107 @@ class Basic():
         else:
             await ctx.send("Please supply some information, yo.")
 
-
     # TODO: Add view quote command; Add edit quote command
     # TODO: Add info command creation support
+
+    # !q ; quote
+    @commands.command(name="quote", aliases=["q",])
+    async def quote(self, ctx):
+        db = TinyDB(f'quotes_{ctx.channel.name}.json')
+        Quote = Query()
+       
+        # Check if there are args
+        if self.check_args(ctx):
+            args = self.get_args(ctx)
+            
+            # Checking args validity
+            if args.find(";"):
+                user_quote = args[args.find(';') +2:]
+                user_author = args[:args.find(';')].lstrip(" ")
+            
+                # Check if author is specified
+                if user_author != '':
+                    actual_author = None 
+                    # Checks if author is in db
+                    if db.contains(Quote.author == user_author):
+                        quotes = db.search(Quote.author == user_author)
+                            
+                        actual_author = (db.search(Quote.author == user_author)[0])['author']
+
+                        # Checks if keyword is specified
+                        if user_quote != '':
+                            
+                            actual_quote = None
+                            
+                            # Finding quote...
+                            for quote in quotes:
+                                if re.search(user_quote, quote["quote"]):
+                                    actual_quote = quote["quote"]
+                                    actual_author = quote["author"]
+                            
+                            # Author and quote was found successfully 
+                            if actual_author and actual_quote:
+                                await ctx.send(f" {actual_author} said: '{actual_quote} '")
+
+                            # Author was found successfully but quote was not
+                            elif actual_author and not actual_quote:
+                                await ctx.send(f"Keyword did not return any quotes from {user_author}")
+                            # It would be hard to reach this. But neither return anything..
+                            else:
+                                await ctx.send("You shouldn't be seeing this... but neither returned anything...")
+
+                        # Author is specified and in the db, but keyword is not specified. Return random quote from author
+                        elif user_author != '' and user_quote == '':
+                            chosen_quote = random.choice(quotes)
+                            await ctx.send(f"{actual_author} said: ' {chosen_quote['quote']} '")
+
+
+                    # Author has been specified but isn't in the db
+                    else:
+                        await ctx.send(f"{user_author} is not in the db. Maybe it's not in proper case?")
+
+                    
+                    
+                # Author not secified, but keyword is
+                elif user_author == '' and user_quote != '':
+                    all_quotes = db.all()
+                    possible_quotes = []
+
+                    # Finding quote...
+                    for quote in all_quotes:
+                        if re.search(user_quote, quote["quote"]):
+                            actual_quote = quote["quote"]
+                            actual_author = quote["author"]
+                            possible_quotes.append(quote)
+                          
+                    
+                    # If there are any results from the keyword
+                    if len(possible_quotes) > 0:
+                        quote = random.choice(possible_quotes)
+                        await ctx.send(f"{quote['author']} said: ' {quote['quote']} '")
+
+                    # There weren't any results from the keyword
+                    else:
+                        await ctx.send(f"No quotes were found containing, {user_quote}. Could be your casing.")
+                            
+                # Maybe author and keyword isn't specified but still put ';' for some reason??
+                else:
+                    await ctx.send("To get a random quote, just run !quote or !q.")
+                    
+            # Args aren't valid
+            else:
+                await ctx.send("Args aren't valid.")
+
+
+
+        # No args; Return random quote
+        else:
+            quotes = db.all()
+            if quotes:
+                quote = random.choice(quotes)
+                await ctx.send(f"{quote['author']} said: ' {quote['quote']} '")
+
+            else:
+                await ctx.send("There are no quotes, sadly.")
+
+
