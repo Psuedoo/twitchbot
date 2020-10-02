@@ -371,6 +371,4 @@ class Basic():
         else:
             await ctx.send("You have to supply quote ID. Try using !quote command to get quote ID.")
 
-
-
 # TODO: Add info command creation support

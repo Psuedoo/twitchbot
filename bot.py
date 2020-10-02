@@ -2,6 +2,7 @@ import os
 import random
 import wikipedia
 import asyncio
+import requests
 from aiohttp import web
 from twitchio.ext import commands
 from cogs.utils import checks
@@ -91,6 +92,12 @@ class Bot(commands.Bot):
         streamer_name = streamer_name.lstrip("@")
 
         await ctx.send(f"Go check out https://www.twitch.tv/{streamer_name} They are an awesome person!")
+
+    @commands.command(name="followage")
+    async def followage(self, ctx):
+        response = requests.get(f"https://2g.be/twitch/following.php?user=$({ctx.author.name})&channel=$({ctx.channel.name})&format=mwdhms")
+        await ctx.send(response.text)
+
 
 if __name__ == '__main__':
     bot = Bot()
