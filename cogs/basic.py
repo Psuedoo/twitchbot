@@ -159,9 +159,16 @@ class Basic():
     @commands.command(name="JoJo")
     @commands.check(checks.is_lettrebags_channel)
     async def jojo(self, ctx):
-        poses_dict = {"pose1": "url",
-                "pose2": "url",
-                "pose3": "url"}
+        poses_dict = {"pose1": "https://i.imgur.com/OODPxwv.jpg",
+                "pose2": "https://i.imgur.com/ByTd3iA.jpg",
+                "pose3": "https://i.imgur.com/OH2B4L9.jpg",
+                "pose4": "https://i.imgur.com/JDSohOV.jpg",
+                "pose5": "https://i.imgur.com/ZUrSSUM.jpg",
+                "pose6": "https://i.imgur.com/iKoXx6u.jpg",
+                "pose7": "https://i.imgur.com/la9Tqar.jpg",
+                "pose8": "https://i.imgur.com/lmYnk7s.jpg",
+                "pose9": "https://i.imgur.com/DyCVUp5.jpg",
+                "pose10": "https://i.imgur.com/QOQAPY0.jpg",}
         pose = random.choice(list(poses_dict.items()))
         await ctx.send(f"{pose[0]}: {pose[1]}")
 
