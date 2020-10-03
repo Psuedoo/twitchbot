@@ -78,6 +78,7 @@ class Bot(commands.Bot):
         await self.handle_commands(message)
 
 
+
     # Commands use a decorator...
     @commands.command(name="test")
     async def my_command(self, ctx):
