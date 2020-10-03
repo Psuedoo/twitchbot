@@ -1,4 +1,5 @@
 import traceback
+from tinydb import TinyDB, Query
 from twitchio.ext import commands
 from cogs.utils import checks
 from twitchio import webhook
@@ -8,27 +9,6 @@ class Admin():
     def __init__(self, bot):
         self.bot = bot
         self.breakdown = None
-
-
-
-    def check_args(self, prefix, message):
-            message = message.lstrip(prefix)
-            if message:
-                return True
-            else:
-                return False
-
-
-    def get_args(self, prefix, message):
-        check = self.check_args(prefix, message)
-        if check:
-            return message.lstrip(f"{prefix} ")
-        else:
-            return None
-
-    async def event_user_follows(self, ctx):
-        await ctx.send(f"Thanks for the follow {webhook.UserFollows(1)}")
-
 
     @commands.command(name="unload")
     @commands.check(checks.is_mod)
@@ -82,4 +62,7 @@ class Admin():
         else:
             await ctx.send("Please supply a new title.")
 
+# TODO: Add info command creation support
 
+# !addcommand "stupac62" "KEYBOARDS"
+# !stupac62 -> KEYBOARDS

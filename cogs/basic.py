@@ -16,41 +16,6 @@ class Basic():
     def __init__(self, bot):
         self.bot = bot
 
-    def clean_message(self, ctx):
-        command_name = None
-        message = ctx.message.clean_content
-        
-        if ctx.command.aliases:
-            for alias in ctx.command.aliases:
-                if message.startswith(alias):
-                    print(alias)
-                    command_name = alias
-                    break
-        if message.startswith(ctx.command.name):
-            command_name = ctx.command.name
-
-        message = message.replace(command_name, '')
-        return message
-
-
-
-    def check_args(self, ctx):
-            message = self.clean_message(ctx)
-            if message:
-                return True
-            else:
-                return False
-
-
-    def get_args(self, ctx):
-        check = self.check_args(ctx)
-        if check:
-            args = self.clean_message(ctx)
-            return args
-        else:
-            return None
-    
-
     @commands.command(name="randomnumber")
     async def randnumber(self, ctx):
         await ctx.send(f"Your random number is {random.randint(1, 1000)}.")
@@ -141,6 +106,7 @@ class Basic():
 
 
     @commands.check(checks.is_psuedoos_channel)
+    @commands.command(name="github", aliases=["project", "git",])
     async def github(self, ctx):
         await ctx.send("The current project, probably: https://github.com/Psuedoo/twitchbot")
 
@@ -377,4 +343,4 @@ class Basic():
         await ctx.send(f"{author=}")
         await ctx.send(f"{quote=}")
 
-# TODO: Add info command creation support
+

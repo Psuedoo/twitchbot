@@ -33,41 +33,6 @@ class Bot(commands.Bot):
                 print(e)
 
 
-    def clean_message(self, ctx):
-        command_name = None
-        message = ctx.message.clean_content
-        
-        if ctx.command.aliases:
-            for alias in ctx.command.aliases:
-                if message.startswith(alias):
-                    print(alias)
-                    command_name = alias
-                    break
-        if message.startswith(ctx.command.name):
-            command_name = ctx.command.name
-
-        message = message.replace(command_name, '')
-        return message
-
-
-
-    def check_args(self, ctx):
-            message = self.clean_message(ctx)
-            if message:
-                return True
-            else:
-                return False
-
-
-    def get_args(self, ctx):
-        check = self.check_args(ctx)
-        if check:
-            args = self.clean_message(ctx)
-            return args
-        else:
-            return None
-
-
     # Events don't need decorators when subclassed
     async def event_ready(self):
         print(f"Ready | {self.nick}")
