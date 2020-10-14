@@ -10,6 +10,7 @@ from cogs.utils import checks
 initial_extensions = [
         "cogs.admin",
         "cogs.basic",
+        "cogs.sound",
         ]
 
 class Bot(commands.Bot):
