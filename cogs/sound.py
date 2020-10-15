@@ -1,12 +1,15 @@
+import os 
 import asyncio
 from twitchio.ext import commands
 from cogs.utils import checks
-
+from tinydb import TinyDB, Query
 
 @commands.cog()
 class Sound():
     def __init__(self, bot):
         self.bot = bot
+        self.db = TinyDB(os.path.expanduser('~/coding/sounds/sounds.json'))
+
 
     async def tcp_echo_client(self, message):
         reader, writer = await asyncio.open_connection('localhost', 3000)
@@ -23,4 +26,10 @@ class Sound():
     async def play(self, ctx, *sound):
         full_sound = " ".join(sound)
         await self.tcp_echo_client(full_sound)
+
+    @commands.command(name="viewsounds")
+    async def view_sounds(self, ctx):
+        sounds = [sound.get('command_name') for sound in self.db]
+        await ctx.send(sounds) 
+            
 
