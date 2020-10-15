@@ -43,8 +43,6 @@ class Bot(commands.Bot):
         print(f"{message._channel}'s channel:\n{message._author.name}:\t{message.content}\t{message.timestamp}")
         await self.handle_commands(message)
 
-
-
     # Commands use a decorator...
     @commands.command(name="test")
     async def my_command(self, ctx):

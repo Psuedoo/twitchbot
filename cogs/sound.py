@@ -22,6 +22,31 @@ class Sound():
 
         writer.close()
 
+    async def event_raw_data(self, data):
+        tags = data.split(";")
+        user_name = None
+        bit_amount = None
+        channel_name = None
+        for tag in tags:
+            if tag.startswith("user-type="):
+                channel_name = tag[tag.find("#")+1:tag.rfind(":")-1]
+            if tag.startswith("display-name="):
+                user_name = tag[tag.find("=")+1:]
+            if tag.startswith("bits="):
+                bit_amount = tag[tag.find("=")+1:]
+        try: 
+            channel = self.bot.get_channel(channel_name)
+        except:
+            pass
+        else:
+            if bit_amount:
+                if int(bit_amount) == 1:
+                    await channel.send(f"Thank you {user_name}, for the bit!")
+                elif int(bit_amount) > 1:
+                    await channel.send(f"Thank you {user_name}, for {bit_amount} bits!")
+                await self.tcp_echo_client("cheer")
+
+
     @commands.command(name="play")
     async def play(self, ctx, *sound):
         full_sound = " ".join(sound)
@@ -30,6 +55,6 @@ class Sound():
     @commands.command(name="viewsounds")
     async def view_sounds(self, ctx):
         sounds = [sound.get('command_name') for sound in self.db]
-        await ctx.send(sounds) 
+        await ctx.send(sounds)
             
 
