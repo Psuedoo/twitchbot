@@ -8,7 +8,6 @@ from tinydb import TinyDB, Query
 class Sound():
     def __init__(self, bot):
         self.bot = bot
-        self.db = TinyDB(os.path.expanduser('~/coding/sounds/sounds.json'))
 
     async def tcp_echo_client(self, message):
         reader, writer = await asyncio.open_connection('localhost', 3000)
@@ -64,5 +63,6 @@ class Sound():
 
     @commands.command(name="viewsounds")
     async def view_sounds(self, ctx):
+        self.db = TinyDB(os.path.expanduser('~/coding/sounds/sounds_{ctx.channel.name}.json'))
         sounds = [sound.get('command_name') for sound in self.db]
         await ctx.send(sounds)

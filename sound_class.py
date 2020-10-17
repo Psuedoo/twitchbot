@@ -6,6 +6,7 @@ from tinydb import TinyDB, Query
 
 class SoundFile:
     def __init__(self, command_name, url, title=None):
+        self.channel_name = channel_name
         self.command_name = command_name
         self.url = url
         if title:
@@ -23,8 +24,7 @@ class SoundFile:
         p = Path('~')
         self.path = p / 'coding' / 'sounds'
         self.file_path = f'~/coding/sounds/{self.title}'
-
-        self.db = TinyDB(f'{os.path.expanduser(self.path)}/sounds.json')
+        self.db = TinyDB(f'{os.path.expanduser(self.path)}/sounds_{self.channel_name}.json')
         
 
     def download_sound(self):
