@@ -13,11 +13,13 @@ class Config:
 
         self.prefix = config_data.get('prefix', '!')
         self.channel_name = config_data.get('channel_name', channel_name)
-        self.quotes = config_data.get('quotes', f'quotes/quotes_{channel_name}.json')
         self.shoutout_message = config_data.get('shoutout_message', 'Go check out this awesome person! ')
+        self.discord_id = config_data.get('discord_id', None)
         self.discord_message = config_data.get('discord_message', 'Feel free to join the Discord to stay connected in between streams!: ')
         self.discord_invite_link = config_data.get('discord_invite_link', None)
-        self.sounds = config_data.get('sounds', 'sounds directory based on channel name')
+        self.commands = config_data.get('commands', None)
+        self.quotes = config_data.get('quotes', f'quotes/quotes_{channel_name}.json')
+        self.sounds = f'{os.path.expanduser("~/coding")}/sounds/sounds_{self.discord_id}.json'
         
         if len(config_data) == 0:
             self.update_config()
@@ -27,6 +29,7 @@ class Config:
                 "prefix": self.prefix,
                 "channel_name": self.channel_name,
                 "shoutout_message": self.shoutout_message,
+                "discord_id": self.discord_id,
                 "discord_message": self.discord_message,
                 "discord_invite_link": self.discord_invite_link,
                 "commands": self.commands,
@@ -56,6 +59,7 @@ class Config:
                 return json.load(config_file)
         except FileNotFoundError:
             self.update_config()
+            self.get_config()
         
 
 

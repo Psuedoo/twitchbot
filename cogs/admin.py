@@ -64,6 +64,14 @@ class Admin():
         config.update_config()
         await ctx.send("Successfully updated shoutout message!")
 
+    @commands.command(name="setdiscordid")
+    @commands.check(checks.is_mod)
+    async def set_discord_id(self, ctx, discord_id):
+        config = Config(ctx.channel.name)
+        config.discord_id = discord_id
+        config.update_config()
+        await ctx.send("Successfully updated discord id!")
+
     @commands.command(name="setdiscordlink")
     @commands.check(checks.is_mod)
     async def set_discord_link(self, ctx, link):

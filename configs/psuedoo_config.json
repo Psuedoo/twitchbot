@@ -1,8 +1,11 @@
 {
   "prefix": "!",
   "channel_name": "psuedoo",
-  "quotes": "quotes_psuedoo.json",
-  "discord_message": "If you are interested, join my discord here:",
-  "discord_invite_link": "https://discord.gg/ABGRpm8",
-  "sounds": "sounds directory based on channel name"
+  "shoutout_message": "Go check out this awesome person! ",
+  "discord_id": "440869747626868736",
+  "discord_message": "Feel free to join the Discord to stay connected in between streams!: ",
+  "discord_invite_link": null,
+  "commands": null,
+  "quotes": "quotes/quotes_psuedoo.json",
+  "sounds": "/home/psuedo/coding/sounds/sounds_None.json"
 }

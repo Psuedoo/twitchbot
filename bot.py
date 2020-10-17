@@ -43,7 +43,7 @@ class Bot(commands.Bot):
 
     async def event_ready(self):
         print(f"Ready | {self.nick}")
-        self.configs = self.instantiate_configs(self.channels)
+        self.instantiate_configs(self.channels)
        
 
     async def event_message(self, message):

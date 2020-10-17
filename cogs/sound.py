@@ -3,11 +3,22 @@ import asyncio
 from twitchio.ext import commands
 from cogs.utils import checks
 from tinydb import TinyDB, Query
+from config import Config
 
 @commands.cog()
 class Sound():
     def __init__(self, bot):
         self.bot = bot
+
+    def instantiate_configs(self, channels, specific_channel_name=None):
+        if specific_channel_name:
+            for channel in channels:
+                if channel == specific_channel_name:
+                    return Config(channel)
+
+        else:
+            return [Config(channel) for channel in channels]
+
 
     async def tcp_echo_client(self, message):
         reader, writer = await asyncio.open_connection('localhost', 3000)
@@ -58,11 +69,15 @@ class Sound():
 
     @commands.command(name="play")
     async def play(self, ctx, *sound):
+        config = self.instantiate_configs(self.bot.channels, ctx.channel.name)
         full_sound = " ".join(sound)
-        await self.tcp_echo_client(full_sound)
+        await self.tcp_echo_client(f"sound_name={full_sound};"
+                f"channel_name={ctx.channel.name};"
+                f"discord_id={config.discord_id}")
 
     @commands.command(name="viewsounds")
     async def view_sounds(self, ctx):
-        self.db = TinyDB(os.path.expanduser('~/coding/sounds/sounds_{ctx.channel.name}.json'))
+        config = Config(ctx.channel.name)
+        self.db = TinyDB(config.sounds)
         sounds = [sound.get('command_name') for sound in self.db]
         await ctx.send(sounds)
