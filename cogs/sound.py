@@ -54,8 +54,7 @@ class Sound():
                 elif int(bit_amount) > 1:
                     await channel.send(f"Thank you {user_name}, for {bit_amount} bits!")
                 await self.tcp_echo_client("cheer")
-            elif is_subscriber and not message.startswith("!"):
-                #if user_name.lower() != "psuedoo" and user_name.lower() != "psuedoobot":
+            elif is_subscriber and not message.startswith("!") and not channel_name:
                 await self.tcp_echo_client("oof")
 
     @commands.command(name="play")

@@ -1,0 +1,8 @@
+{
+  "prefix": "!",
+  "channel_name": "psuedoo",
+  "quotes": "quotes_psuedoo.json",
+  "discord_message": "If you are interested, join my discord here:",
+  "discord_invite_link": "https://discord.gg/ABGRpm8",
+  "sounds": "sounds directory based on channel name"
+}

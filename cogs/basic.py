@@ -4,6 +4,7 @@ import random
 import requests
 import json
 import re
+from config import Config
 from http import HTTPStatus
 from twitchio.ext import commands
 from twitchio import dataclasses
@@ -19,7 +20,6 @@ class Basic():
     @commands.command(name="randomnumber")
     async def randnumber(self, ctx):
         await ctx.send(f"Your random number is {random.randint(1, 1000)}.")
-
 
     @commands.command(name="roll")
     async def roll(self, ctx, sides: int=None):
@@ -40,8 +40,6 @@ class Basic():
     async def coolest(self, ctx):
         await ctx.send(f"The coolest has to be {random.choice(ctx.channel.chatters).name}")
 
-
-    # TODO : Fix this command, broken with ASMR and Abra
     @commands.command(name="wiki")
     async def wiki(self, ctx, *topic):
     
@@ -74,21 +72,6 @@ class Basic():
             await ctx.send(f"Hello, {ctx.author.name}!")
 
 
-    # TODO: Maybe just download songs to listen to later.. maybe add songs to a spotify playlist? 
-    @commands.command(name="songsuggest")
-    async def songsuggest(self, ctx):
-        db = TinyDB("songs.json")
-        
-        if self.check_args("songsuggest", ctx.message.clean_content):
-            url = get_args("songsuggest", ctx.message.clean_content) 
-            args = ['youtube-dl', '-x', url]
-            Popen("", args)
-
-        else:
-            await ctx.send("You did something wrong, {ctx.author.name}.")
-
-
-
     @commands.command(name="shot")
     async def shot(self, ctx, name):
         if name:
@@ -99,12 +82,13 @@ class Basic():
 
     @commands.command(name="discord")
     async def discord(self, ctx):
-        if ctx.channel.name == "psuedoo":
-            await ctx.send("Join the Discord to stay connected after stream! https://discord.gg/UcFgW6A")
-        elif ctx.channel.name == "lettrebag":
-            await ctx.send("Hey, did you know there is a Discord server that you can chat with all of your new friends? You can also see plenty of pet pictures! Join here: https://discord.gg/SpD5ZDt")
+        config = Config(ctx.channel.name)
+        if config.discord_invite_link:
+            await ctx.send(f"{config.discord_message} {config.discord_invite_link}")
+        else:
+            await ctx.send("There is no discord linked to this channel. Set the discord invite link with !setdiscord")
 
-
+    # Convert commands like this to channel commands in config
     @commands.check(checks.is_psuedoos_channel)
     @commands.command(name="github", aliases=["project", "git",])
     async def github(self, ctx):
@@ -180,10 +164,7 @@ class Basic():
     @commands.command(name="addquote", aliases=["aq",])
     @commands.check(checks.is_mod)
     async def addquote(self, ctx, user_author, user_quote):
-        db = TinyDB(f'quotes_{ctx.channel.name}.json')
-
-        print(f"{user_author=}")
-        print(f"{user_quote=}")
+        db = TinyDB(f'quotes/quotes_{ctx.channel.name}.json')
 
         if user_author and user_quote:
             Quote = Query()
@@ -203,7 +184,7 @@ class Basic():
 
     
     def get_quote(self, ctx, user_author=None, user_quote=None):
-        db = TinyDB(f'quotes_{ctx.channel.name}.json')
+        db = TinyDB(f'quotes/quotes_{ctx.channel.name}.json')
         Quote = Query()
      
         # Check if there are args
@@ -321,7 +302,7 @@ class Basic():
     @commands.check(checks.is_mod)
     @commands.command(name="deletequote", aliases=["dq",])
     async def deletequote(self, ctx):
-        db = TinyDB(f'quotes_{ctx.channel.name}.json')
+        db = TinyDB(f'quotes/quotes_{ctx.channel.name}.json')
         Quote = Query()
 
         if self.check_args(ctx):
@@ -343,11 +324,5 @@ class Basic():
                 await ctx.send("You have to supply quote ID. Try using !quote command to get quote ID.")
         else:
             await ctx.send("You have to supply quote ID. Try using !quote command to get quote ID.")
-
-
-    @commands.command(name="testing")
-    async def testing(self, ctx, author, quote):
-        await ctx.send(f"{author=}")
-        await ctx.send(f"{quote=}")
 
 

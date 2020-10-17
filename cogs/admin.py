@@ -1,4 +1,5 @@
 import traceback
+from config import Config
 from tinydb import TinyDB, Query
 from twitchio.ext import commands
 from cogs.utils import checks
@@ -54,13 +55,32 @@ class Admin():
         else:
             await ctx.send(f"'{module}' reloaded.")
 
-    @commands.command(name="title")
+    @commands.command(name="setshoutoutmessage")
     @commands.check(checks.is_mod)
-    async def title(self, ctx):
-        if check_args("title", ctx.message.clean_content):
-            args = get_args("title", ctx.message.clean_content)
-        else:
-            await ctx.send("Please supply a new title.")
+    async def set_shoutout_message(self, ctx, *message):
+        shoutout_message = " ".join(message)
+        config = Config(ctx.channel.name)
+        config.shoutout_message = shoutout_message
+        config.update_config()
+        await ctx.send("Successfully updated shoutout message!")
+
+    @commands.command(name="setdiscordlink")
+    @commands.check(checks.is_mod)
+    async def set_discord_link(self, ctx, link):
+        config = Config(ctx.channel.name)
+        config.discord_invite_link = link
+        config.update_config()
+        await ctx.send("Successfully updated discord invite link!")
+
+    @commands.command(name="setdiscordmessage")
+    @commands.check(checks.is_mod)
+    async def set_discord_message(self, ctx, *message):
+        discord_message = " ".join(message)
+        config = Config(ctx.channel.name)
+        config.discord_message = discord_message
+        config.update_config()
+        await ctx.send("Successfully updated discord message!")
+
 
 # TODO: Add info command creation support
 

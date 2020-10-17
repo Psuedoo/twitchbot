@@ -1,0 +1,7 @@
+{
+  "prefix": "!",
+  "channel_name": "gamestapro_elite",
+  "quotes": "quotes_gamestapro_elite.json",
+  "discord_invite_link": null,
+  "sounds": "sounds directory based on channel name"
+}

@@ -1,0 +1,7 @@
+{
+  "prefix": "!",
+  "channel_name": "arrowspice",
+  "quotes": "quotes_arrowspice.json",
+  "discord_invite_link": null,
+  "sounds": "sounds directory based on channel name"
+}

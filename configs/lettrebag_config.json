@@ -1,0 +1,7 @@
+{
+  "prefix": "!",
+  "channel_name": "lettrebag",
+  "quotes": "quotes_lettrebag.json",
+  "discord_invite_link": null,
+  "sounds": "sounds directory based on channel name"
+}
