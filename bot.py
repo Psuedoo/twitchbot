@@ -3,13 +3,13 @@ import random
 import wikipedia
 import asyncio
 import requests
-from aiohttp import web
 from twitchio.ext import commands
 from cogs.utils import checks
 
 initial_extensions = [
         "cogs.admin",
         "cogs.basic",
+        "cogs.sound",
         ]
 
 class Bot(commands.Bot):
@@ -37,24 +37,20 @@ class Bot(commands.Bot):
     async def event_ready(self):
         print(f"Ready | {self.nick}")
 
-
     async def event_message(self, message):
-        print(f"{message._channel}'s channel:\n{message._author.name}:\t{message.content}\t{message.timestamp}")
+        print(f"{message._channel}'s channel:\n"
+            f"{message._author.name}:\t{message.content}\t{message.timestamp}")
         await self.handle_commands(message)
-
-
 
     # Commands use a decorator...
     @commands.command(name="test")
     async def my_command(self, ctx):
         await ctx.send(f"Hello {ctx.author.name}!")
 
-
     @commands.command(name="shoutout", aliases=["so",])
     @commands.check(checks.is_mod)
     async def shoutout(self, ctx):
         *_, streamer_name = ctx.message.content.rsplit(" ")
-        
         streamer_name = streamer_name.lstrip("@")
 
         await ctx.send(f"Go check out https://www.twitch.tv/{streamer_name} They are an awesome person!")
