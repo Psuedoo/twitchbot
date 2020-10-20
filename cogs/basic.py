@@ -86,7 +86,7 @@ class Basic():
         if config.discord_invite_link:
             await ctx.send(f"{config.discord_message} {config.discord_invite_link}")
         else:
-            await ctx.send("There is no discord linked to this channel. Set the discord invite link with !setdiscord")
+            await ctx.send("There is no discord linked to this channel. Set the discord invite link with !setdiscordlink")
 
     # Convert commands like this to channel commands in config
     @commands.check(checks.is_psuedoos_channel)

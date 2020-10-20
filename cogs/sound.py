@@ -1,4 +1,4 @@
-import os 
+import os
 import asyncio
 from twitchio.ext import commands
 from cogs.utils import checks
@@ -30,6 +30,7 @@ class Sound():
         print(f"Received: {data.decode()!r}")
 
         writer.close()
+        print('Closed')
 
     async def event_raw_data(self, data):
         user_name = None
@@ -44,28 +45,43 @@ class Sound():
             if tag.startswith("user-type="):
                 channel_name = tag[tag.find("#")+1:tag.rfind(":")-1]
                 message = tag[tag.rfind(":")+1:]
+
             if tag.startswith("display-name="):
                 user_name = tag[tag.find("=")+1:]
+
             if tag.startswith("bits="):
                 bit_amount = tag[tag.find("=")+1:]
+
             if tag.startswith("subscriber="):
                 if tag[tag.find("=")+1:] == "1":
                     is_subscriber = True
-                
+    
+        try:
+            config = Config(channel_name)
+            db = TinyDB(config.sounds)
+        except:
+            pass
+
         try:
             channel = self.bot.get_channel(channel_name)
         except:
-            print("Channel doesn't exist")
-
+            # Channel doesn't exist
+            pass
+       
         if channel:
             if bit_amount:
                 if int(bit_amount) == 1:
                     await channel.send(f"Thank you {user_name}, for the bit!")
                 elif int(bit_amount) > 1:
                     await channel.send(f"Thank you {user_name}, for {bit_amount} bits!")
-                await self.tcp_echo_client("cheer")
-            elif is_subscriber and not message.startswith("!") and not channel_name:
-                await self.tcp_echo_client("oof")
+                    cheer_sound = [sound.get('command_name') for sound in db if sound.get('command_name') == 'cheer'][0]
+                await self.tcp_echo_client(cheer_sound)
+            elif is_subscriber and not message.startswith("!") or not channel_name:
+                sub_sound = [sound.get('command_name') for sound in db if sound.get('command_name') == 'sub'][0]
+                await self.tcp_echo_client(f'sound_name={sub_sound};'
+                        f'channel_name={channel_name};'
+                        f'discord_id={config.discord_id}')
+    
 
     @commands.command(name="play")
     async def play(self, ctx, *sound):

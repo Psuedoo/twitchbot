@@ -64,4 +64,4 @@ class SoundFile:
     def view_commands(self):
         for command in self.db:
             print(command)
-            
+
