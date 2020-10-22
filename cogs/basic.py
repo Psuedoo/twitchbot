@@ -299,27 +299,23 @@ class Basic():
 
     @commands.check(checks.is_mod)
     @commands.command(name="deletequote", aliases=["dq",])
-    async def deletequote(self, ctx):
+    async def deletequote(self, ctx, quote_id):
         db = TinyDB(f'quotes/quotes_{ctx.channel.name}.json')
         Quote = Query()
 
-        if self.check_args(ctx):
-            args = self.get_args(ctx).strip()
-            if args.isalnum():
-                quote_id = int(args)
-                if db.contains(doc_id=quote_id):
-                    quote = db.get(doc_id=quote_id)
-                    await ctx.send(f"Trying to delete quote: {quote}....")
-                    try:
-                        db.remove(doc_ids=[quote_id,])
-                    except KeyError as e:
-                        await ctx.send("Could not delete quote.. {e}")
-                    else:
-                        await ctx.send("Quote has been deleted!")
+        if quote_id.isalnum():
+            quote_id = int(quote_id)
+            if db.contains(doc_id=quote_id):
+                quote = db.get(doc_id=quote_id)
+                await ctx.send(f"Trying to delete quote: {quote}....")
+                try:
+                    db.remove(doc_ids=[quote_id,])
+                except KeyError as e:
+                    await ctx.send("Could not delete quote.. {e}")
                 else:
-                    await ctx.send(f"There is no quote in the DB with the ID {quote_id}")
+                    await ctx.send("Quote has been deleted!")
             else:
-                await ctx.send("You have to supply quote ID. Try using !quote command to get quote ID.")
+                await ctx.send(f"There is no quote in the DB with the ID {quote_id}")
         else:
             await ctx.send("You have to supply quote ID. Try using !quote command to get quote ID.")
 
