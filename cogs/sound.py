@@ -32,8 +32,9 @@ class Sound():
         tags = data.split(";")
 
         for tag in tags:
-            if tag.startswith("user-type="):
-                channel_name = tag[tag.find("#")+1:tag.rfind(":")-1]
+            if tag.startswith("user-type=") and "PRIVMSG" in tag:
+                channel_name = tag[tag.find('#')+1:]
+                channel_name = channel_name[:channel_name.find(":")-1]
                 message = tag[tag.rfind(":")+1:]
 
             if tag.startswith("display-name="):
@@ -48,7 +49,7 @@ class Sound():
     
         try:
             if channel_name:
-                config = Config(channel_name) # This is where weird configs are coming from 
+                config = Config(channel_name) 
                 db = TinyDB(config.sounds)
         except:
             pass
