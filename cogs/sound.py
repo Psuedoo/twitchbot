@@ -10,16 +10,6 @@ class Sound():
     def __init__(self, bot):
         self.bot = bot
 
-    def instantiate_configs(self, channels, specific_channel_name=None):
-        if specific_channel_name:
-            for channel in channels:
-                if channel == specific_channel_name:
-                    return Config(channel)
-
-        else:
-            return [Config(channel) for channel in channels]
-
-
     async def tcp_echo_client(self, message):
         reader, writer = await asyncio.open_connection('localhost', 3000)
 
@@ -57,8 +47,9 @@ class Sound():
                     is_subscriber = True
     
         try:
-            config = Config(channel_name)
-            db = TinyDB(config.sounds)
+            if channel_name:
+                config = Config(channel_name) # This is where weird configs are coming from 
+                db = TinyDB(config.sounds)
         except:
             pass
 
@@ -85,7 +76,7 @@ class Sound():
 
     @commands.command(name="play")
     async def play(self, ctx, *sound):
-        config = self.instantiate_configs(self.bot.channels, ctx.channel.name)
+        config = Config(ctx.channel.name)
         full_sound = " ".join(sound)
         await self.tcp_echo_client(f"sound_name={full_sound};"
                 f"channel_name={ctx.channel.name};"

@@ -44,8 +44,6 @@ class Basic():
     async def wiki(self, ctx, *topic):
     
         if topic:
-            # " ".join(topic)
-
             try:
                 full_summary = wikipedia.summary(topic)[0:450]
             except wikipedia.exceptions.DisambiguationError as e:
