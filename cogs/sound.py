@@ -67,13 +67,18 @@ class Sound():
                 elif int(bit_amount) > 1:
                     await channel.send(f"Thank you {user_name}, for {bit_amount} bits!")
                     cheer_sound = [sound.get('command_name') for sound in db if sound.get('command_name') == 'cheer'][0]
-                await self.tcp_echo_client(cheer_sound)
+                await self.tcp_echo_client(f'sound_name={cheer_sound};'
+                        f'channel_name={channel_name};'
+                        f'discord_id={config.discord_id}')
             elif is_subscriber and not message.startswith("!") or not channel_name:
-                sub_sound = [sound.get('command_name') for sound in db if sound.get('command_name') == 'sub'][0]
-                await self.tcp_echo_client(f'sound_name={sub_sound};'
+                try:
+                    sub_sound = [sound.get('command_name') for sound in db if sound.get('command_name') == 'sub'][0]
+                    await self.tcp_echo_client(f'sound_name={sub_sound};'
                         f'channel_name={channel_name};'
                         f'discord_id={config.discord_id}')
     
+                except:
+                    pass
 
     @commands.command(name="play")
     async def play(self, ctx, *sound):
