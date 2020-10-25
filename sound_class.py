@@ -12,11 +12,11 @@ class SoundFile:
         if self.config.discord_id:
             self.guild_id = self.config.discord_id
 
-        self.path = Path.parent / 'discordbot - testing' / 'sounds'
+        self.path = Path.parent / 'discordbot' / 'sounds'
 
         self.file_path = self.path / f'{self.title}'
 
-        self.db_path = Path.parent / 'discordbot - testing' / 'sounds' / f'sounds_{self.guild_id}.json'
+        self.db_path = Path.parent / 'discordbot' / 'sounds' / f'sounds_{self.guild_id}.json'
         self.db = TinyDB(self.db_path)
 
         if self.guild_id:

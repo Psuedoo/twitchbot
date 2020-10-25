@@ -20,9 +20,8 @@ class Config:
         self.discord_invite_link = config_data.get('discord_invite_link', None)
         self.commands = Path.cwd() / 'commands' / f'commands_{channel_name}.json'
         self.quotes = Path.cwd() / 'quotes' / f'quotes_{channel_name}.json'
-        self.sounds = Path.cwd().parent / 'discordbot - testing' / 'sounds' / f'sounds_{self.discord_id}.json'
+        self.sounds = Path.cwd().parent / 'discordbot' / 'sounds' / f'sounds_{self.discord_id}.json'
         
-        #if len(config_data) == 0:
         self.update_config()
 
     def to_json(self):
