@@ -94,4 +94,7 @@ class Sound():
         config = Config(ctx.channel.name)
         self.db = TinyDB(config.sounds)
         sounds = [sound.get('command_name') for sound in self.db]
-        await ctx.send(sounds)
+        if len(sounds) == 0:
+            await ctx.send("There aren't any sounds. Maybe try using !setdiscordid <id>.")
+        else:
+            await ctx.send(sounds)
