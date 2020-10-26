@@ -6,62 +6,23 @@ from config import Config
 
 
 class SoundFile:
-    def __init__(self, channel_name, command_name=None, url=None, title=None):
+    def __init__(self, channel_name, command_name=None):
         self.command_name = command_name
-        self.url = url
         self.config = Config(channel_name)
         if self.config.discord_id:
             self.guild_id = self.config.discord_id
-        if title:
-            self.title = title
-        else:
-            self.title = '%(title)s'
 
+        self.path = Path.parent / 'discordbot' / 'sounds'
 
-        self.ydl_opts = {'format': 'bestaudio',
-                        'noplaylist': True,
-                        'outtmpl': f'~/coding/sounds/{self.title}.%(ext)s',
-                        'postprocessors': [{'key': 'FFmpegExtractAudio'}]}
-         
-        p = Path('~')
-        self.path = p / 'coding' / 'sounds'
-        self.file_path = f'~/coding/sounds/{self.title}'
-        
-        self.db = TinyDB(f'{os.path.expanduser(self.path)}/sounds_{self.guild_id}.json')
+        self.file_path = self.path / f'{self.title}'
+
+        self.db_path = Path.parent / 'discordbot' / 'sounds' / f'sounds_{self.guild_id}.json'
+        self.db = TinyDB(self.db_path)
+
         if self.guild_id:
-            self.config.sounds = f"{os.path.expanduser(self.path)}/sounds_{self.guild_id}.json"
+            self.config.sounds = self.db_path
         else:
             self.config.sounds = None
-        self.config.update_config() 
 
-    def download_sound(self):
-        with youtube_dl.YoutubeDL(self.ydl_opts) as ydl:
-            ydl.download([self.url])
-
-        if os.path.isfile(os.path.expanduser(self.file_path)+'.m4a'):
-            extension = '.m4a'
-        elif os.path.isfile(os.path.expanduser(self.file_path)+'.opus'):
-            extension = '.opus'
-        elif os.path.isfile(os.path.expanduser(self.file_path)+'.ogg'):
-            extension = '.ogg'
-        elif os.path.isfile(os.path.expanduser(self.file_path)+'.mp3'):
-            extension = '.mp3'
-        else:
-            extension = '.savingasdiffext'
- 
-        self.file_path = self.file_path+extension
-
-        self.add_command()
-
-    def add_command(self):
-        config = Config(self.guild_id)
-        command_info = {'file': self.file_path,
-                        'command_name': str(self.command_name)}
-
-        self.db.insert(command_info)
-        config.update_config()
-
-    def view_commands(self):
-        for command in self.db:
-            print(command)
+        self.config.update_config()
 

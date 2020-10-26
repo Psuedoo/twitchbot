@@ -8,10 +8,11 @@ from twitchio.ext import commands
 from cogs.utils import checks
 
 initial_extensions = [
-        "cogs.admin",
-        "cogs.basic",
-        "cogs.sound",
-        ]
+    "cogs.admin",
+    "cogs.basic",
+    "cogs.sound",
+]
+
 
 class Bot(commands.Bot):
     def __init__(self):
@@ -20,35 +21,26 @@ class Bot(commands.Bot):
             irc_token=os.environ["TMI_TOKEN"],
             client_id=os.environ["CLIENT_ID"],
             nick=os.environ["BOT_NICK"],
-            prefix=os.environ["BOT_PREFIX"], # Figure out how to change prefix from channel to channel 
-            initial_channels=self.channels,
+            prefix=os.environ["BOT_PREFIX"],  # TODO: Figure out how to change prefix from channel to channel
+            initial_channels=os.environ["CHANNEL"].split(";"),
         )
-   
+
         for extension in initial_extensions:
             try:
                 self.load_module(extension)
             except Exception as e:
                 print(f"Failed to load extension {extension}.", e)
 
-
-    def instantiate_configs(self, channels, specific_channel_name=None):
-        if specific_channel_name:
-            for channel in channels:
-                if channel == specific_channel_name:
-                    return Config(channel)
-
-        else:
-            return [Config(channel) for channel in channels]
-
+    def instantiate_configs(self, channels):
+        return [Config(channel) for channel in channels if channel]
 
     async def event_ready(self):
         print(f"Ready | {self.nick}")
         self.instantiate_configs(self.channels)
-       
 
     async def event_message(self, message):
-        print(f"{message._channel}'s channel:\n"
-            f"{message._author.name}:\t{message.content}\t{message.timestamp}")
+        print(f"{message.channel}'s channel:\n"
+              f"{message.author.name}:\t{message.content}\t{message.timestamp}")
         await self.handle_commands(message)
 
     # Commands use a decorator...
@@ -68,7 +60,7 @@ class Bot(commands.Bot):
     @commands.command(name="followage")
     async def followage(self, ctx):
         response = requests.get(
-                f"https://2g.be/twitch/following.php?user=$({ctx.author.name})&channel=$({ctx.channel.name})&format=mwdhms")
+            f"https://2g.be/twitch/following.php?user=$({ctx.author.name})&channel=$({ctx.channel.name})&format=mwdhms")
         await ctx.send(response.text)
 
 
