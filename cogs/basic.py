@@ -90,7 +90,9 @@ class Basic():
     @commands.check(checks.is_psuedoos_channel)
     @commands.command(name="github", aliases=["project", "git",])
     async def github(self, ctx):
-        await ctx.send("The current project, probably: https://github.com/Psuedoo/twitchbot")
+        await ctx.send("Twitch bot: https://github.com/Psuedoo/twitchbot"
+                       "Discord bot: https://github.com/Psuedoo/discordbot")
+
 
 
     @commands.command(name="docs", aliases=["whatshouldpsuedoobedoinginsteadofaskingchat",])
