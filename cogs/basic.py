@@ -91,7 +91,7 @@ class Basic():
     @commands.command(name="github", aliases=["project", "git",])
     async def github(self, ctx):
         await ctx.send("Twitch bot: https://github.com/Psuedoo/twitchbot"
-                       "Discord bot: https://github.com/Psuedoo/discordbot")
+                       " Discord bot: https://github.com/Psuedoo/discordbot")
 
 
 
