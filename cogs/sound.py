@@ -1,8 +1,6 @@
-import os
 import asyncio
 from twitchio.ext import commands
-from cogs.utils import checks
-from tinydb import TinyDB, Query
+from tinydb import TinyDB
 from config import Config
 
 
@@ -67,7 +65,8 @@ class Sound():
                     await channel.send(f"Thank you {user_name}, for the bit!")
                 elif int(bit_amount) > 1:
                     await channel.send(f"Thank you {user_name}, for {bit_amount} bits!")
-                    cheer_sound = [sound.get('command_name') for sound in db if sound.get('command_name') == 'cheer'][0]
+                    if int(bit_amount) > 100:
+                        cheer_sound = [sound.get('command_name') for sound in db if sound.get('command_name') == 'cheer'][0]
                 await self.tcp_echo_client(f'sound_name={cheer_sound};'
                                            f'channel_name={channel_name};'
                                            f'discord_id={config.discord_id}')
