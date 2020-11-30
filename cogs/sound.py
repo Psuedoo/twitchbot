@@ -2,6 +2,7 @@ import asyncio
 from twitchio.ext import commands
 from tinydb import TinyDB
 from config import Config
+from db import db_handler, db_handler_sound
 
 
 @commands.cog()
@@ -90,10 +91,8 @@ class Sound():
 
     @commands.command(name="viewsounds")
     async def view_sounds(self, ctx):
-        config = Config(ctx.channel.name)
-        self.db = TinyDB(config.sounds)
-        sounds = [sound.get('command_name') for sound in self.db]
-        if len(sounds) == 0:
-            await ctx.send("There aren't any sounds. Maybe try using !setdiscordid <id>.")
-        else:
+        sounds = await db_handler_sound.get_sounds(ctx.channel.name)
+        if len(sounds) > 0:
             await ctx.send(sounds)
+        else:
+            await ctx.send('There are no sounds')

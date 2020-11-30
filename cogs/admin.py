@@ -2,6 +2,7 @@ import traceback
 from config import Config
 from twitchio.ext import commands
 from cogs.utils import checks
+from db import db_handler, db_handler_admin
 
 @commands.cog()
 class Admin():
@@ -57,9 +58,7 @@ class Admin():
     @commands.check(checks.is_mod)
     async def set_shoutout_message(self, ctx, *message):
         shoutout_message = " ".join(message)
-        config = Config(ctx.channel.name)
-        config.shoutout_message = shoutout_message
-        config.update_config()
+        await db_handler_admin.set_shoutout_message(ctx.channel.name, shoutout_message)
         await ctx.send("Successfully updated shoutout message!")
 
     @commands.command(name="setdiscordid")

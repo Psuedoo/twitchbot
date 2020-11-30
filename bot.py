@@ -6,6 +6,7 @@ import requests
 from config import Config
 from twitchio.ext import commands
 from cogs.utils import checks
+from db import db_handler, db_handler_admin
 
 initial_extensions = [
     "cogs.admin",
@@ -31,12 +32,9 @@ class Bot(commands.Bot):
             except Exception as e:
                 print(f"Failed to load extension {extension}.", e)
 
-    def instantiate_configs(self, channels):
-        return [Config(channel) for channel in channels if channel]
-
     async def event_ready(self):
         print(f"Ready | {self.nick}")
-        self.instantiate_configs(self.channels)
+        await db_handler.initialize_channels(self.channels)
 
     async def event_message(self, message):
         print(f"{message.channel}'s channel:\n"
@@ -54,8 +52,7 @@ class Bot(commands.Bot):
         *_, streamer_name = ctx.message.content.rsplit(" ")
         streamer_name = streamer_name.lstrip("@")
         streamer_url = f"https://www.twitch.tv/{streamer_name}"
-        config = Config(ctx.channel.name)
-        await ctx.send(f"{config.shoutout_message} {streamer_url}")
+        await ctx.send(f"{await db_handler_admin.get_shoutout_message(ctx.channel.name)} {streamer_url}")
 
     @commands.command(name="followage")
     async def followage(self, ctx):
