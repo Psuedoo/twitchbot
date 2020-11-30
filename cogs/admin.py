@@ -1,9 +1,7 @@
 import traceback
 from config import Config
-from tinydb import TinyDB, Query
 from twitchio.ext import commands
 from cogs.utils import checks
-from twitchio import webhook
 
 @commands.cog()
 class Admin():

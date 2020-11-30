@@ -1,7 +1,5 @@
-import os
-import youtube_dl
 from pathlib import Path
-from tinydb import TinyDB, Query
+from tinydb import TinyDB
 from config import Config
 
 
