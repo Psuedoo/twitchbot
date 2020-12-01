@@ -1,9 +1,5 @@
 import os
-import random
-import wikipedia
-import asyncio
 import requests
-from config import Config
 from twitchio.ext import commands
 from cogs.utils import checks
 from db import db_handler, db_handler_admin

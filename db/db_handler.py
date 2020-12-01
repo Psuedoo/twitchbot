@@ -1,7 +1,6 @@
 import asyncio
 
-from sqlalchemy.ext.asyncio import create_async_engine
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from db.models import *
 
 
@@ -38,4 +37,5 @@ def local_channel_exists(session, channel_name):
     channels = session.query(Twitch).filter(Twitch.name == channel_name)
     if len(channels.all()) > 0:
         return True
+
 

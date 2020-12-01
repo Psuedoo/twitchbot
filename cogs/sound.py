@@ -1,7 +1,5 @@
 import asyncio
 from twitchio.ext import commands
-from tinydb import TinyDB
-from config import Config
 from db import db_handler, db_handler_sound
 
 
@@ -48,16 +46,9 @@ class Sound():
                     is_subscriber = True
 
         try:
-            if channel_name:
-                config = Config(channel_name)
-                db = TinyDB(config.sounds)
-        except:
-            pass
-
-        try:
             channel = self.bot.get_channel(channel_name)
         except:
-            # Channel doesn't exist
+            print('Channel doesnt exist')
             pass
 
         if channel:
@@ -67,32 +58,32 @@ class Sound():
                 elif int(bit_amount) > 1:
                     await channel.send(f"Thank you {user_name}, for {bit_amount} bits!")
                     if int(bit_amount) > 100:
-                        cheer_sound = [sound.get('command_name') for sound in db if sound.get('command_name') == 'cheer'][0]
-                        await self.tcp_echo_client(f'sound_name={cheer_sound};'
-                                                   f'channel_name={channel_name};'
-                                                   f'discord_id={config.discord_id}')
+                        cheer_sound = await db_handler_sound.get_sound('cheer')
+                        if cheer_sound:
+                            await self.tcp_echo_client(f'sound_name={cheer_sound.name};'
+                                                       f'channel_name={channel_name};'
+                                                       f'discord_id={cheer_sound.guild_id}')
             elif is_subscriber and not message.startswith("!") or not channel_name:
                 try:
-                    sub_sound = [sound.get('command_name') for sound in db if sound.get('command_name') == 'sub'][0]
-                    await self.tcp_echo_client(f'sound_name={sub_sound};'
-                                               f'channel_name={channel_name};'
-                                               f'discord_id={config.discord_id}')
+                    sub_sound = await db_handler_sound.get_sound('sub')
+                    if sub_sound:
+                        await self.tcp_echo_client(f'sound_name={sub_sound.name};'
+                                                   f'channel_name={channel_name};'
+                                                   f'discord_id={sub_sound.guild_id}')
 
                 except:
                     pass
 
     @commands.command(name="play")
-    async def play(self, ctx, *sound):
-        config = Config(ctx.channel.name)
-        full_sound = " ".join(sound)
-        await self.tcp_echo_client(f"sound_name={full_sound};"
+    async def play(self, ctx, sound):
+        await self.tcp_echo_client(f"sound_name={sound};"
                                    f"channel_name={ctx.channel.name};"
-                                   f"discord_id={config.discord_id}")
+                                   f"discord_id={await db_handler_sound.get_sound_guild_id(sound)}")
 
     @commands.command(name="viewsounds")
     async def view_sounds(self, ctx):
         sounds = await db_handler_sound.get_sounds(ctx.channel.name)
-        if len(sounds) > 0:
+        if sounds and len(sounds) > 0:
             await ctx.send(sounds)
         else:
             await ctx.send('There are no sounds')
