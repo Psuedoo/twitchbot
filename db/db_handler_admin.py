@@ -10,7 +10,7 @@ async def set_shoutout_message(name, message):
 def local_set_shoutout_message(session, name, message):
     row = session.query(Twitch).filter(Twitch.name == name).one_or_none()
     row.shoutout_message = message
-    row.commit()
+    session.commit()
 
 
 async def get_shoutout_message(name):

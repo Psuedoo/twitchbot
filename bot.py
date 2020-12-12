@@ -32,6 +32,8 @@ class Bot(commands.Bot):
         print(f"Ready | {self.nick}")
         await db_handler.initialize_channels(self.channels)
 
+    # TODO: Make this prettier for my eyes
+    # TODO: Add check for TwitchCommand on message received (right here)
     async def event_message(self, message):
         print(f"{message.channel}'s channel:\n"
               f"{message.author.name}:\t{message.content}\t{message.timestamp}")
