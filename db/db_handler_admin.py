@@ -21,3 +21,7 @@ async def get_shoutout_message(name):
 def local_get_shoutout_message(session, name):
     row = session.query(Twitch).filter(Twitch.name == name).one_or_none()
     return row.shoutout_message
+
+# TODO: Do this
+def local_get_prefix(session, channel_name):
+    pass

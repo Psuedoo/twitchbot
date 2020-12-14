@@ -2,12 +2,13 @@ import os
 import requests
 from twitchio.ext import commands
 from cogs.utils import checks
-from db import db_handler, db_handler_admin
+from db import db_handler, db_handler_admin, db_handler_command
 
 initial_extensions = [
     "cogs.admin",
     "cogs.basic",
     "cogs.sound",
+    "cogs.commands",
 ]
 
 
@@ -34,10 +35,19 @@ class Bot(commands.Bot):
 
     # TODO: Make this prettier for my eyes
     # TODO: Add check for TwitchCommand on message received (right here)
+    # TODO: Add prefix to the bot and get it instead of '?'
     async def event_message(self, message):
+        prefix = self.prefixes[0]
+        if message.content.startswith(prefix):
+            command = message.content[1:]
+            response = await db_handler_command.get_command(message.channel.name, command)
+            if response:
+                await message.channel.send(response)
+            else:
+                await self.handle_commands(message)
+
         print(f"{message.channel}'s channel:\n"
               f"{message.author.name}:\t{message.content}\t{message.timestamp}")
-        await self.handle_commands(message)
 
     # Commands use a decorator...
     @commands.command(name="test")

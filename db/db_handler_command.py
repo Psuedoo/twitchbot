@@ -23,7 +23,7 @@ async def delete_command(channel_name, command_name):
 def local_delete_command(session, channel_name, command_name):
     if local_command_exists(session, channel_name, command_name):
         row = session.query(TwitchCommands) \
-            .filter(TwitchCommands.channel_name == channel_name, TwitchCommands.name == command_name)
+            .filter(TwitchCommands.channel_name == channel_name, TwitchCommands.name == command_name).one_or_none()
 
         session.delete(row)
         session.commit()
@@ -49,4 +49,6 @@ async def get_command(channel_name, command_name):
 def local_get_command(session, channel_name, command_name):
     row = session.query(TwitchCommands)\
         .filter(TwitchCommands.channel_name == channel_name, TwitchCommands.name == command_name).one_or_none()
-    return row
+    if row:
+        return row.response
+    return
