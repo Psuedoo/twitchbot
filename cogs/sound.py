@@ -47,8 +47,8 @@ class Sound():
 
         try:
             channel = self.bot.get_channel(channel_name)
-        except:
-            print('Channel doesnt exist')
+        except AttributeError as e:
+            # print(e)
             pass
 
         if channel:

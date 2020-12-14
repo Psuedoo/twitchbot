@@ -34,7 +34,6 @@ class Bot(commands.Bot):
         await db_handler.initialize_channels(self.channels)
 
     # TODO: Make this prettier for my eyes
-    # TODO: Add check for TwitchCommand on message received (right here)
     # TODO: Add prefix to the bot and get it instead of '?'
     async def event_message(self, message):
         prefix = self.prefixes[0]
@@ -46,8 +45,20 @@ class Bot(commands.Bot):
             else:
                 await self.handle_commands(message)
 
-        print(f"{message.channel}'s channel:\n"
-              f"{message.author.name}:\t{message.content}\t{message.timestamp}")
+        inner_msg = f"{message.channel}'s channel"
+        line_count = (30 - len(inner_msg)) // 2
+        header = '-' * line_count + inner_msg + '-' * line_count
+        footer = '-' * ((line_count * 2) + len(inner_msg))
+
+        # Dedent removes leading whitespace
+
+        print(f"""
+            {header}
+            Time:\t\t{message.timestamp}
+            Author:\t\t{message.author.name}
+            Message:\t{message.content}
+            {footer}
+        """)
 
     # Commands use a decorator...
     @commands.command(name="test")
