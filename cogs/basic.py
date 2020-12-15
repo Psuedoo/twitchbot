@@ -1,15 +1,12 @@
-import subprocess
 import wikipedia
 import random
 import requests
-import json
 import re
-from config import Config
 from http import HTTPStatus
 from twitchio.ext import commands
-from twitchio import dataclasses
 from cogs.utils import checks
 from tinydb import TinyDB, Query
+from db import db_handler_admin, db_handler_quotes
 
 
 @commands.cog()
@@ -80,9 +77,12 @@ class Basic():
 
     @commands.command(name="discord")
     async def discord(self, ctx):
-        config = Config(ctx.channel.name)
-        if config.discord_invite_link:
-            await ctx.send(f"{config.discord_message} {config.discord_invite_link}")
+        discord_invite_link = await db_handler_admin.get_discord_link(ctx.channel.name)
+        if discord_invite_link:
+            message = await db_handler_admin.get_discord_invite_message(ctx.channel.name)
+            if not message:
+                message = "Feel free to join the discord here:"
+            await ctx.send(f"{message} {discord_invite_link}")
         else:
             await ctx.send("There is no discord linked to this channel. Set the discord invite link with !setdiscordlink")
 
@@ -160,25 +160,17 @@ class Basic():
     async def webrtc(self, ctx):
         await ctx.send("Why ofcourse, it was @stupac62..")
 
-
     @commands.command(name="addquote", aliases=["aq",])
     @commands.check(checks.is_mod)
     async def addquote(self, ctx, user_author, user_quote):
         db = TinyDB(f'quotes/quotes_{ctx.channel.name}.json')
 
         if user_author and user_quote:
-            Quote = Query()
-            contains = db.contains(Quote['quote'] == user_quote)
-
-            if contains:
-                await ctx.send("Quote already exists...")
-            else:
-                try:
-                    db.insert({'author': user_author, 'quote': user_quote})
-                except:
-                    await ctx.send("Failed to add quote.")
-                else:
-                    await ctx.send("Quote added successfully!")
+            try:
+                await db_handler_quotes.add_quote(ctx.channel.name, user_author, user_quote)
+                await ctx.send("Quote added successfully!")
+            except:
+                await ctx.send("Failed to add quote.")
         else:
             await ctx.send("Please supply author and quote. Surround both with quotation marks!")
 
@@ -279,7 +271,7 @@ class Basic():
             return random.choice(db.all()) 
             #await ctx.send(f"{quote['author']} said: ' {quote['quote']} '")
 
-            
+    # TODO: Finish this for DB migration.. UGH
     # !q ; quote
     @commands.command(name="quote", aliases=["q",])
     async def quote(self, ctx, user_author=None, user_quote=None):
@@ -302,23 +294,13 @@ class Basic():
     @commands.check(checks.is_mod)
     @commands.command(name="deletequote", aliases=["dq",])
     async def deletequote(self, ctx, quote_id):
-        db = TinyDB(f'quotes/quotes_{ctx.channel.name}.json')
-        Quote = Query()
 
         if quote_id.isalnum():
             quote_id = int(quote_id)
-            if db.contains(doc_id=quote_id):
-                quote = db.get(doc_id=quote_id)
-                await ctx.send(f"Trying to delete quote: {quote}....")
-                try:
-                    db.remove(doc_ids=[quote_id,])
-                except KeyError as e:
-                    await ctx.send("Could not delete quote.. {e}")
-                else:
-                    await ctx.send("Quote has been deleted!")
+            has_deleted = await db_handler_quotes.delete_quote(ctx.channel.name, quote_id)
+            if has_deleted:
+                await ctx.send('Deleted quote!')
             else:
-                await ctx.send(f"There is no quote in the DB with the ID {quote_id}")
-        else:
-            await ctx.send("You have to supply quote ID. Try using !quote command to get quote ID.")
+                await ctx.send('Could not delete quote')
 
 

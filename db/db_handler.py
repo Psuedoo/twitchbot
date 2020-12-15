@@ -5,7 +5,7 @@ from db.models import *
 
 
 async def connection():
-    engine = create_async_engine('postgresql://psuedo@192.168.0.180/discordbot_dev', echo=False)
+    engine = create_async_engine('postgresql://psuedo@192.168.0.180/discordbot_dev', echo=True)
     session = AsyncSession(bind=engine)
     return session
 
@@ -26,6 +26,7 @@ async def initialize_channels(channels=[]):
                     Twitch(name=channel,
                            shoutout_message=default_shoutout_message,
                            guild_invite_link=None,
+                           guild_invite_message=None,
                            guild_id=None)
                 ]
                 await insert(data)

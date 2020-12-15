@@ -92,6 +92,7 @@ class Twitch(Base):
     name = Column(String, primary_key=True)
     shoutout_message = Column(String)
     guild_invite_link = Column(String)
+    guild_invite_message = Column(String)
     guild_id = Column(BigInteger, ForeignKey('guilds.id'))
     sounds = relationship('SoundsAssociation', backref='twitch', cascade='all, delete')
     quotes = relationship('Quotes', backref='twitch', cascade='all, delete')
@@ -121,7 +122,7 @@ if __name__ == '__main__':
                 tbl.drop(engine)
 
 
-    engine = create_engine('postgresql://psuedo@192.168.0.179/discordbot_dev', echo=True)
+    engine = create_engine('postgresql://psuedo@192.168.0.180/discordbot_dev', echo=True)
     user_input = input("1. Create Tables\n"
                        "2. Delete Tabels\n"
                        "3. Renew Tables\n> ")

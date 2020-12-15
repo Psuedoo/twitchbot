@@ -64,30 +64,21 @@ class Admin():
     @commands.command(name="setdiscordid")
     @commands.check(checks.is_mod)
     async def set_discord_id(self, ctx, discord_id):
-        config = Config(ctx.channel.name)
-        config.discord_id = discord_id
-        config.update_config()
+        await db_handler_admin.set_discord_id(ctx.channel.name, discord_id)
         await ctx.send("Successfully updated discord id!")
 
     @commands.command(name="setdiscordlink")
     @commands.check(checks.is_mod)
     async def set_discord_link(self, ctx, link):
-        config = Config(ctx.channel.name)
-        config.discord_invite_link = link
-        config.update_config()
+        await db_handler_admin.set_discord_link(ctx.channel.name, link)
         await ctx.send("Successfully updated discord invite link!")
 
+    # TODO: Add this to DB
     @commands.command(name="setdiscordmessage")
     @commands.check(checks.is_mod)
     async def set_discord_message(self, ctx, *message):
         discord_message = " ".join(message)
-        config = Config(ctx.channel.name)
-        config.discord_message = discord_message
-        config.update_config()
+        await db_handler_admin.set_discord_invite_message(discord_message)
         await ctx.send("Successfully updated discord message!")
 
 
-# TODO: Add info command creation support
-
-# !addcommand "stupac62" "KEYBOARDS"
-# !stupac62 -> KEYBOARDS
