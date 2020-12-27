@@ -98,14 +98,6 @@ class Twitch(Base):
     quotes = relationship('Quotes', backref='twitch', cascade='all, delete')
 
 
-class Quotes(Base):
-    __tablename__ = 'quotes'
-    id = Column(Integer, primary_key=True)
-    channel_name = Column(String, ForeignKey('twitch.name'))
-    author = Column(String)
-    quote = Column(String)
-
-
 class TwitchCommands(Base):
     __tablename__ = 'twitchcommands'
     id = Column(Integer, primary_key=True)
@@ -122,7 +114,7 @@ if __name__ == '__main__':
                 tbl.drop(engine)
 
 
-    engine = create_engine('postgresql://psuedo@192.168.0.180/discordbot_dev', echo=True)
+    engine = create_engine('postgresql://psuedo@192.168.0.179/discordbot_dev', echo=True)
     user_input = input("1. Create Tables\n"
                        "2. Delete Tabels\n"
                        "3. Renew Tables\n> ")
