@@ -1,6 +1,6 @@
 import asyncio
 from twitchio.ext import commands
-from db import db_handler, db_handler_sound
+from db import db_handler_sound
 
 
 @commands.cog()

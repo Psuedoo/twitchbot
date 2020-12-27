@@ -1,8 +1,7 @@
 import traceback
-from config import Config
 from twitchio.ext import commands
 from cogs.utils import checks
-from db import db_handler, db_handler_admin
+from db import db_handler_admin
 
 @commands.cog()
 class Admin():

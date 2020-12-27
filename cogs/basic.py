@@ -1,11 +1,9 @@
 import wikipedia
 import random
 import requests
-import re
 from http import HTTPStatus
 from twitchio.ext import commands
 from cogs.utils import checks
-from tinydb import TinyDB, Query
 from db import db_handler_admin
 
 
