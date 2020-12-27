@@ -95,7 +95,6 @@ class Twitch(Base):
     guild_invite_message = Column(String)
     guild_id = Column(BigInteger, ForeignKey('guilds.id'))
     sounds = relationship('SoundsAssociation', backref='twitch', cascade='all, delete')
-    quotes = relationship('Quotes', backref='twitch', cascade='all, delete')
 
 
 class TwitchCommands(Base):

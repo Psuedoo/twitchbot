@@ -6,7 +6,7 @@ from http import HTTPStatus
 from twitchio.ext import commands
 from cogs.utils import checks
 from tinydb import TinyDB, Query
-from db import db_handler_admin, db_handler_quotes
+from db import db_handler_admin
 
 
 @commands.cog()
