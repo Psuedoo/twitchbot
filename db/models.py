@@ -11,6 +11,7 @@ class Guilds(Base):
     id = Column(BigInteger, primary_key=True)
     name = Column(String(20))
     owner_id = Column(BigInteger)
+    twitch_channel = Column(String)
     config = relationship('Configs', backref='guilds', cascade='all, delete')
     twitch = relationship('Twitch', backref='twitch', cascade='all, delete')
     roles = relationship('Roles', backref='guilds', cascade='all, delete')
@@ -113,7 +114,7 @@ if __name__ == '__main__':
                 tbl.drop(engine)
 
 
-    engine = create_engine('postgresql://psuedo@192.168.0.179/discordbot_dev', echo=True)
+    engine = create_engine('postgresql://psuedo@192.168.0.180/discordbot_dev', echo=True)
     user_input = input("1. Create Tables\n"
                        "2. Delete Tabels\n"
                        "3. Renew Tables\n> ")
