@@ -1,5 +1,4 @@
 from twitchio.ext import commands
-from cogs.utils import checks
 
 class Basic(commands.Cog):
     def __init__(self, bot):
