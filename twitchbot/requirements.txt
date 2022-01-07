@@ -1,0 +1,4 @@
+twitchio
+asyncio
+requests
+python-dotenv
