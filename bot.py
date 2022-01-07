@@ -5,11 +5,12 @@ from dotenv import load_dotenv
 from twitchio.ext import commands
 
 # For when cogs are implemented
-# initial_extensions = [
+initial_extensions = [
+    "cogs.basic",
+    "cogs.mod",
 #     "cogs.admin",
-#     "cogs.basic",
 #     "cogs.sound",
-# ]
+]
 
 # Use for local building with .env file rather than Docker env vars
 if os.path.exists("./.env"):
@@ -35,11 +36,11 @@ class Bot(commands.Bot):
         )
 
         # Loading the exenstions
-        # for extension in initial_extensions:
-        #     try:
-        #         self.load_module(extension)
-        #     except Exception as e:
-        #         print(f"Failed to load extension {extension}.", e)
+        for extension in initial_extensions:
+            try:
+                self.load_module(extension)
+            except Exception as e:
+                print(f"Failed to load extension {extension}.", e)
 
 
     async def event_ready(self):
@@ -62,32 +63,6 @@ class Bot(commands.Bot):
         response = f'Hello {ctx.author.name}!'
         logging.info(f'Psuedoobot={response}')
         await ctx.send(response)
-
-    @commands.command(name='discord')
-    async def discord(self, ctx):
-        await ctx.send('https://discord.gg/UcFgW6A')
-
-    @commands.command(name='giveaway')
-    async def giveaway(self, ctx):
-        response = f'http://www.rafflecopter.com/rafl/display/512f00b00/?'
-        logging.info(f'Psuedoobot={response}')
-        await ctx.send(response)
-
-
-    # @commands.command(name="shoutout", aliases=["so", ])
-    # @commands.check(checks.is_mod)
-    # async def shoutout(self, ctx):
-    #     *_, streamer_name = ctx.message.content.rsplit(" ")
-    #     streamer_name = streamer_name.lstrip("@")
-    #     streamer_url = f"https://www.twitch.tv/{streamer_name}"
-    #     config = Config(ctx.channel.name)
-    #     await ctx.send(f"{config.shoutout_message} {streamer_url}")
-
-    @commands.command(name="followage")
-    async def followage(self, ctx):
-        response = requests.get(
-            f"https://2g.be/twitch/following.php?user=$({ctx.author.name})&channel=$({ctx.channel.name})&format=mwdhms")
-        await ctx.send(response.text)
 
 
 if __name__ == '__main__':
