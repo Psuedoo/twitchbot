@@ -1,6 +1,5 @@
 from twitchio.ext import commands
 
-
 class Mod(commands.Cog):
 
     def __init__(self, bot):
@@ -8,7 +7,6 @@ class Mod(commands.Cog):
 
     async def cog_check(self, ctx):
         return ctx.author.is_mod
-
 
     @commands.command(name="shoutout", aliases=["so", ])
     async def shoutout(self, ctx):

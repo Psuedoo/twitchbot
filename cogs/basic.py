@@ -21,13 +21,5 @@ class Basic(commands.Cog):
             f"https://2g.be/twitch/following.php?user=$({ctx.author.name})&channel=$({ctx.channel.name})&format=mwdhms")
         await ctx.send(response.text)
 
-    # @commands.command(name="shoutout", aliases=["so", ])
-    # @checks.is_mod
-    # async def shoutout(self, ctx):
-    #     *_, streamer_name = ctx.message.content.rsplit(" ")
-    #     streamer_name = streamer_name.lstrip("@")
-    #     streamer_url = f"https://www.twitch.tv/{streamer_name}"
-    #     await ctx.send(f"Go follow: {streamer_url}")
-
 def prepare(bot):
     bot.add_cog(Basic(bot))
