@@ -1,3 +1,4 @@
+import requests
 from twitchio.ext import commands
 
 class Basic(commands.Cog):
@@ -11,7 +12,6 @@ class Basic(commands.Cog):
     @commands.command(name='giveaway')
     async def giveaway(self, ctx):
         response = f'http://www.rafflecopter.com/rafl/display/512f00b00/?'
-        logging.info(f'Psuedoobot={response}')
         await ctx.send(response)
 
     @commands.command(name="followage")
